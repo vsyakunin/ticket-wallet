@@ -2,9 +2,7 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 
 	"ticket-wallet/domain/models"
@@ -23,7 +21,6 @@ func (svc *Service) GetHallLayout() (models.HallLayout, error) {
 
 	jsonFile, err := os.Open("layout.json")
 	if err != nil {
-		log.Println(err.Error())
 		return hallLayout, err
 	}
 
@@ -43,9 +40,14 @@ func (svc *Service) GetHallLayout() (models.HallLayout, error) {
 }
 
 func (svc *Service) StartSeating(startSeatingPayload models.StartSeatingPayload) (models.SeatingResponse, error) {
-	fmt.Println(startSeatingPayload.Groups)
-
 	var seatingResponse models.SeatingResponse
+
+	hallLayout, err := svc.GetHallLayout()
+	if err != nil {
+		return seatingResponse, err
+	}
+
+	seatedLayout := assignSeats(hallLayout, startSeatingPayload)
 
 	taskID, err := uuid.NewV4()
 	if err != nil {
@@ -53,7 +55,8 @@ func (svc *Service) StartSeating(startSeatingPayload models.StartSeatingPayload)
 	}
 
 	return models.SeatingResponse{
-		TaskID: taskID.String(),
-		Status: models.SrsProcessing,
+		TaskID:  taskID.String(),
+		Status:  models.SrsProcessing,
+		Payload: seatedLayout,
 	}, nil
 }

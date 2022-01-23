@@ -1,34 +1,32 @@
 package service
 
 import (
-	"fmt"
-	"strconv"
-
 	"ticket-wallet/domain/models"
 )
 
 type ToBeSeated struct {
 	NumPpl    int
+	Name      string
 	AreSeated bool
 }
 
-func assignSeats(seats models.HallLayout, groups []int) {
-	toBeSeated := make([]ToBeSeated, 0, len(groups))
-	for _, group := range groups {
-		toBeSeated = append(toBeSeated, ToBeSeated{NumPpl: group, AreSeated: false})
+func assignSeats(seats models.HallLayout, startSeatingPayload models.StartSeatingPayload) models.HallLayout {
+	toBeSeated := make([]ToBeSeated, 0, len(startSeatingPayload.Groups))
+	for _, group := range startSeatingPayload.Groups {
+		toBeSeated = append(toBeSeated, ToBeSeated{NumPpl: group.GroupSize, Name: group.Name, AreSeated: false})
 	}
 
 	// i is a number of group of groups
 	for i := range toBeSeated {
-		seatGroup(seats, toBeSeated[i].NumPpl, i)
+		seatGroup(seats, toBeSeated[i].NumPpl, toBeSeated[i].Name)
 
 		toBeSeated[i].AreSeated = true
 	}
 
-	fmt.Printf("all seats assigned \n%v\n", seats)
+	return seats
 }
 
-func seatGroup(seats models.HallLayout, group, count int) {
+func seatGroup(seats models.HallLayout, group int, name string) {
 	for j := 0; j < group; j++ {
 		var seatAssigned bool
 
@@ -51,7 +49,7 @@ func seatGroup(seats models.HallLayout, group, count int) {
 					}
 
 					if seats.Sections[sec].Rows[r].Seats[seatNum].IsFree {
-						seats.Sections[sec].Rows[r].Seats[seatNum].TakenBy = strconv.Itoa(count + 1)
+						seats.Sections[sec].Rows[r].Seats[seatNum].TakenBy = name
 						seats.Sections[sec].Rows[r].Seats[seatNum].IsFree = false
 						seatAssigned = true
 						break
