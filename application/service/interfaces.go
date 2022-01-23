@@ -6,4 +6,5 @@ import (
 
 type Repo interface {
 	GetHallLayout() (models.HallLayout, error)
+	StartSeating(models.StartSeatingPayload) (models.SeatingResponse, error)
 }

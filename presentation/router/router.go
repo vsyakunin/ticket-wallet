@@ -24,5 +24,13 @@ func NewRouter(cont *controller.Controller) *mux.Router {
 			Handler(http.HandlerFunc(cont.GetHallLayout))
 	}
 
+	{
+		const routeName = "start-seating"
+		router.Methods(http.MethodPost).
+			Name(routeName).
+			PathPrefix(apiVer).
+			Handler(http.HandlerFunc(cont.StartSeating))
+	}
+
 	return router
 }

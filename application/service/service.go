@@ -2,10 +2,14 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+
 	"ticket-wallet/domain/models"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 type Service struct{}
@@ -36,4 +40,20 @@ func (svc *Service) GetHallLayout() (models.HallLayout, error) {
 	}
 
 	return hallLayout, nil
+}
+
+func (svc *Service) StartSeating(startSeatingPayload models.StartSeatingPayload) (models.SeatingResponse, error) {
+	fmt.Println(startSeatingPayload.Groups)
+
+	var seatingResponse models.SeatingResponse
+
+	taskID, err := uuid.NewV4()
+	if err != nil {
+		return seatingResponse, err
+	}
+
+	return models.SeatingResponse{
+		TaskID: taskID.String(),
+		Status: models.SrsProcessing,
+	}, nil
 }
