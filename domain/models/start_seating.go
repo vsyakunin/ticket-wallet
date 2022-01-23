@@ -1,5 +1,10 @@
 package models
 
 type StartSeatingPayload struct {
-	Groups []int `json:"groups"`
+	Groups []SeatingGroup `json:"groups"`
+}
+
+type SeatingGroup struct {
+	GroupSize int    `json:"size"`
+	Name      string `json:"name"`
 }
