@@ -1,0 +1,434 @@
+{
+  "name": "test hall",
+  "sections": [
+    {
+      "name": "section 1",
+      "rows": [
+        {
+          "num": 1,
+          "seats": [
+            {
+              "num": 1,
+              "actual_num": 1,
+              "rank": "1st",
+              "is_free": true
+            },
+            {
+              "num": 2,
+              "actual_num": 2,
+              "rank": "1st",
+              "is_free": true
+            },
+            {
+              "num": 3,
+              "actual_num": 3,
+              "rank": "1st",
+              "is_free": true
+            },
+            {
+              "num": 4,
+              "actual_num": 4,
+              "rank": "1st",
+              "is_free": true
+            },
+            {
+              "num": 5,
+              "actual_num": 5,
+              "rank": "1st",
+              "is_free": true
+            },
+            {
+              "num": 6,
+              "actual_num": 6,
+              "rank": "1st",
+              "is_free": true
+            },
+            {
+              "num": 7,
+              "actual_num": 7,
+              "rank": "1st",
+              "is_free": true
+            },
+            {
+              "num": 8,
+              "actual_num": 8,
+              "rank": "1st",
+              "is_free": true
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "seats": [
+            {
+              "num": 1,
+              "actual_num": 1,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 2,
+              "actual_num": 2,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 3,
+              "actual_num": 3,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 4,
+              "actual_num": 4,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 5,
+              "actual_num": 5,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 6,
+              "actual_num": 6,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 7,
+              "actual_num": 7,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 8,
+              "actual_num": 8,
+              "rank": "2nd",
+              "is_free": true
+            }
+          ]
+        },
+        {
+          "num": 3,
+          "seats": [
+            {
+              "num": 1,
+              "actual_num": 1,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 2,
+              "actual_num": 2,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 3,
+              "actual_num": 3,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 4,
+              "actual_num": 4,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 5,
+              "actual_num": 5,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 6,
+              "actual_num": 6,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 7,
+              "actual_num": 7,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 8,
+              "actual_num": 8,
+              "rank": "2nd",
+              "is_free": true
+            }
+          ]
+        },
+        {
+          "num": 4,
+          "seats": [
+            {
+              "num": 1,
+              "actual_num": 1,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 2,
+              "actual_num": 2,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 3,
+              "actual_num": 3,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 4,
+              "actual_num": 4,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 5,
+              "actual_num": 5,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 6,
+              "actual_num": 6,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 7,
+              "actual_num": 7,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 8,
+              "actual_num": 8,
+              "rank": "2nd",
+              "is_free": true
+            }
+          ]
+        },
+        {
+          "num": 5,
+          "seats": [
+            {
+              "num": 1,
+              "actual_num": 1,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 2,
+              "actual_num": 2,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 3,
+              "actual_num": 3,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 4,
+              "actual_num": 4,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 5,
+              "actual_num": 5,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 6,
+              "actual_num": 6,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 7,
+              "actual_num": 7,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 8,
+              "actual_num": 8,
+              "rank": "2nd",
+              "is_free": true
+            }
+          ]
+        },
+        {
+          "num": 6,
+          "seats": [
+            {
+              "num": 1,
+              "actual_num": 1,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 2,
+              "actual_num": 2,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 3,
+              "actual_num": 3,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 4,
+              "actual_num": 4,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 5,
+              "actual_num": 5,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 6,
+              "actual_num": 6,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 7,
+              "actual_num": 7,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 8,
+              "actual_num": 8,
+              "rank": "2nd",
+              "is_free": true
+            }
+          ]
+        },
+        {
+          "num": 7,
+          "seats": [
+            {
+              "num": 1,
+              "actual_num": 1,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 2,
+              "actual_num": 2,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 3,
+              "actual_num": 3,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 4,
+              "actual_num": 4,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 5,
+              "actual_num": 5,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 6,
+              "actual_num": 6,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 7,
+              "actual_num": 7,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 8,
+              "actual_num": 8,
+              "rank": "2nd",
+              "is_free": true
+            }
+          ]
+        },
+        {
+          "num": 8,
+          "seats": [
+            {
+              "num": 1,
+              "actual_num": 1,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 2,
+              "actual_num": 2,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 3,
+              "actual_num": 3,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 4,
+              "actual_num": 4,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 5,
+              "actual_num": 5,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 6,
+              "actual_num": 6,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 7,
+              "actual_num": 7,
+              "rank": "2nd",
+              "is_free": true
+            },
+            {
+              "num": 8,
+              "actual_num": 8,
+              "rank": "2nd",
+              "is_free": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
