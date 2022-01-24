@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"ticket-wallet/domain/models"
+	"github.com/vsyakunin/ticket-wallet/domain/models"
 )
 
 const (

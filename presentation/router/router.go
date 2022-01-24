@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	"ticket-wallet/presentation/controller"
+	"github.com/vsyakunin/ticket-wallet/presentation/controller"
 
 	"github.com/gorilla/mux"
 )

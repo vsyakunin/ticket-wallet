@@ -3,8 +3,9 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
+
+	"github.com/prometheus/common/log"
 )
 
 func getLogMessage(err error, instance string) string {
@@ -19,14 +20,14 @@ func writeJSONResponse(w http.ResponseWriter, path string, records interface{}) 
 
 	bytes, err := json.Marshal(records)
 	if err != nil {
-		log.Println(getLogMessage(err, path))
+		log.Error(getLogMessage(err, path))
 		return false
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	if _, err = w.Write(bytes); err != nil {
-		log.Println(getLogMessage(err, path))
+		log.Error(getLogMessage(err, path))
 		return false
 	}
 

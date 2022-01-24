@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"ticket-wallet/domain/models"
+	"github.com/vsyakunin/ticket-wallet/domain/models"
 )
 
 type Service interface {

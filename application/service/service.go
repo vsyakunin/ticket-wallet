@@ -7,8 +7,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"ticket-wallet/domain/models"
+	"github.com/vsyakunin/ticket-wallet/domain/models"
 
+	"github.com/prometheus/common/log"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -76,7 +77,7 @@ func (svc *Service) StartSeating(startSeatingPayload models.StartSeatingPayload)
 	}
 
 	go func() {
-		err = svc.assignSeats(startSeatingPayload, taskIDStr)
+		svc.assignSeats(startSeatingPayload, taskIDStr)
 	}()
 
 	return seatingResponse, nil
@@ -100,19 +101,16 @@ func (svc *Service) GetTaskResults(taskID *string) (models.SeatingResponse, erro
 	return seatingResponse, nil
 }
 
-func updateTaskResults(taskUuid string, seatingResponse models.SeatingResponse) error {
+func updateTaskResults(taskUuid string, seatingResponse models.SeatingResponse) {
 	fileName := fmt.Sprintf(fileNameRaw, folderName, taskUuid)
 
 	file, err := json.MarshalIndent(seatingResponse, "", " ")
 	if err != nil {
-		return err
+		log.Errorf("can't update file for task UUID %s error: %v", taskUuid, err.Error())
 	}
 
 	err = ioutil.WriteFile(fileName, file, 0644)
 	if err != nil {
-		return err
+		log.Errorf("can't update file for task UUID %s error: %v", taskUuid, err.Error())
 	}
-
-	return nil
 }
-

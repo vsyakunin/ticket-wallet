@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
-	"ticket-wallet/domain/models"
-	"time"
+
+	"github.com/vsyakunin/ticket-wallet/domain/models"
+
+	"github.com/prometheus/common/log"
 )
 
 type ToBeSeated struct {
@@ -15,35 +16,39 @@ type ToBeSeated struct {
 	AreSeated bool
 }
 
-func (svc *Service) assignSeats(startSeatingPayload models.StartSeatingPayload, taskUuid string) error {
+func (svc *Service) assignSeats(startSeatingPayload models.StartSeatingPayload, taskUuid string) {
 	var seatingResponse models.SeatingResponse
 
 	fileName := fmt.Sprintf(fileNameRaw, folderName, taskUuid)
 
 	file, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		return err
+		log.Errorf("error while reading file for task UUID %s error: %v", taskUuid, err.Error())
+		seatingResponse.Status = models.SrsError
+		updateTaskResults(taskUuid, seatingResponse)
+		return
 	}
 
 	err = json.Unmarshal(file, &seatingResponse)
 	if err != nil {
-		return err
+		log.Errorf("error while unmarshaling file contents for task UUID %s error: %v", taskUuid, err.Error())
+		seatingResponse.Status = models.SrsError
+		updateTaskResults(taskUuid, seatingResponse)
+		return
 	}
 
 	seats, err := svc.GetHallLayout()
 	if err != nil {
-		return err
+		log.Errorf("error while getting hall layout for task UUID %s error: %v", taskUuid, err.Error())
+		seatingResponse.Status = models.SrsError
+		updateTaskResults(taskUuid, seatingResponse)
+		return
 	}
 
 	seatingResponse.Status = models.SrsProcessing
-	err = updateTaskResults(taskUuid, seatingResponse)
-	if err != nil {
-		return err
-	}
+	updateTaskResults(taskUuid, seatingResponse)
 
-	log.Printf("started task UUID %s", taskUuid)
-
-	time.Sleep(30 * time.Second)
+	log.Infof("started task UUID %s", taskUuid)
 
 	toBeSeated := make([]ToBeSeated, 0, len(startSeatingPayload.Groups))
 	for _, group := range startSeatingPayload.Groups {
@@ -60,14 +65,9 @@ func (svc *Service) assignSeats(startSeatingPayload models.StartSeatingPayload, 
 	seatingResponse.Status = models.SrsCompleted
 	seatingResponse.Payload = seats
 
-	err = updateTaskResults(taskUuid, seatingResponse)
-	if err != nil {
-		return err
-	}
+	updateTaskResults(taskUuid, seatingResponse)
 
-	log.Printf("completed task UUID %s", taskUuid)
-
-	return nil
+	log.Infof("completed task UUID %s", taskUuid)
 }
 
 func seatGroup(seats models.HallLayout, group int, name string) {

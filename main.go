@@ -1,13 +1,14 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"time"
 
 	"ticket-wallet/application/service"
 	"ticket-wallet/presentation/controller"
 	"ticket-wallet/presentation/router"
+
+	"github.com/prometheus/common/log"
 )
 
 const httpTimeout = 30 * time.Second
@@ -24,6 +25,6 @@ func main() {
 		WriteTimeout: httpTimeout,
 	}
 
-	log.Println("Server is up and running")
+	log.Info("Server is up and running")
 	log.Fatal(server.ListenAndServe().Error())
 }
