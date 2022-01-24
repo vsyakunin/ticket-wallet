@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"time"
 
-	"ticket-wallet/application/service"
-	"ticket-wallet/presentation/controller"
-	"ticket-wallet/presentation/router"
+	"github.com/vsyakunin/ticket-wallet/application/service"
+	"github.com/vsyakunin/ticket-wallet/presentation/controller"
+	"github.com/vsyakunin/ticket-wallet/presentation/router"
 
-	"github.com/prometheus/common/log"
+	log "github.com/sirupsen/logrus"
 )
 
 const httpTimeout = 30 * time.Second

@@ -7,7 +7,7 @@ import (
 
 	"github.com/vsyakunin/ticket-wallet/domain/models"
 
-	"github.com/prometheus/common/log"
+	log "github.com/sirupsen/logrus"
 )
 
 type ToBeSeated struct {

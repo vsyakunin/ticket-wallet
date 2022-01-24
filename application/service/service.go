@@ -9,8 +9,8 @@ import (
 
 	"github.com/vsyakunin/ticket-wallet/domain/models"
 
-	"github.com/prometheus/common/log"
 	uuid "github.com/satori/go.uuid"
+	log "github.com/sirupsen/logrus"
 )
 
 type Service struct{}
@@ -50,22 +50,18 @@ func (svc *Service) GetHallLayout() (models.HallLayout, error) {
 func (svc *Service) StartSeating(startSeatingPayload models.StartSeatingPayload) (models.SeatingResponse, error) {
 	var seatingResponse models.SeatingResponse
 
-	taskID, err := uuid.NewV4()
-	if err != nil {
-		return seatingResponse, err
-	}
+	taskUUID := uuid.NewV4().String()
 
-	taskIDStr := taskID.String()
-
-	seatingResponse.TaskID = taskIDStr
+	seatingResponse.TaskID = taskUUID
 	seatingResponse.Status = models.SrsCreated
 
 	newPath := filepath.Join(".", folderName)
-	if err = os.MkdirAll(newPath, os.ModePerm); err != nil {
+
+	if err := os.MkdirAll(newPath, os.ModePerm); err != nil {
 		return seatingResponse, err
 	}
 
-	fileName := fmt.Sprintf(fileNameRaw, folderName, taskIDStr)
+	fileName := fmt.Sprintf(fileNameRaw, folderName, taskUUID)
 
 	file, err := json.MarshalIndent(seatingResponse, "", " ")
 	if err != nil {
@@ -77,7 +73,7 @@ func (svc *Service) StartSeating(startSeatingPayload models.StartSeatingPayload)
 	}
 
 	go func() {
-		svc.assignSeats(startSeatingPayload, taskIDStr)
+		svc.assignSeats(startSeatingPayload, taskUUID)
 	}()
 
 	return seatingResponse, nil
@@ -101,16 +97,16 @@ func (svc *Service) GetTaskResults(taskID *string) (models.SeatingResponse, erro
 	return seatingResponse, nil
 }
 
-func updateTaskResults(taskUuid string, seatingResponse models.SeatingResponse) {
-	fileName := fmt.Sprintf(fileNameRaw, folderName, taskUuid)
+func updateTaskResults(taskUUID string, seatingResponse models.SeatingResponse) {
+	fileName := fmt.Sprintf(fileNameRaw, folderName, taskUUID)
 
 	file, err := json.MarshalIndent(seatingResponse, "", " ")
 	if err != nil {
-		log.Errorf("can't update file for task UUID %s error: %v", taskUuid, err.Error())
+		log.Errorf("can't update file for task UUID %s error: %v", taskUUID, err.Error())
 	}
 
 	err = ioutil.WriteFile(fileName, file, 0644)
 	if err != nil {
-		log.Errorf("can't update file for task UUID %s error: %v", taskUuid, err.Error())
+		log.Errorf("can't update file for task UUID %s error: %v", taskUUID, err.Error())
 	}
 }
