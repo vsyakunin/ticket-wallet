@@ -1,7 +1,12 @@
 package service
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
 	"ticket-wallet/domain/models"
+	"time"
 )
 
 type ToBeSeated struct {
@@ -10,7 +15,36 @@ type ToBeSeated struct {
 	AreSeated bool
 }
 
-func assignSeats(seats models.HallLayout, startSeatingPayload models.StartSeatingPayload) models.HallLayout {
+func (svc *Service) assignSeats(startSeatingPayload models.StartSeatingPayload, taskUuid string) error {
+	var seatingResponse models.SeatingResponse
+
+	fileName := fmt.Sprintf(fileNameRaw, folderName, taskUuid)
+
+	file, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(file, &seatingResponse)
+	if err != nil {
+		return err
+	}
+
+	seats, err := svc.GetHallLayout()
+	if err != nil {
+		return err
+	}
+
+	seatingResponse.Status = models.SrsProcessing
+	err = updateTaskResults(taskUuid, seatingResponse)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("started task UUID %s", taskUuid)
+
+	time.Sleep(30 * time.Second)
+
 	toBeSeated := make([]ToBeSeated, 0, len(startSeatingPayload.Groups))
 	for _, group := range startSeatingPayload.Groups {
 		toBeSeated = append(toBeSeated, ToBeSeated{NumPpl: group.GroupSize, Name: group.Name, AreSeated: false})
@@ -23,7 +57,17 @@ func assignSeats(seats models.HallLayout, startSeatingPayload models.StartSeatin
 		toBeSeated[i].AreSeated = true
 	}
 
-	return seats
+	seatingResponse.Status = models.SrsCompleted
+	seatingResponse.Payload = seats
+
+	err = updateTaskResults(taskUuid, seatingResponse)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("completed task UUID %s", taskUuid)
+
+	return nil
 }
 
 func seatGroup(seats models.HallLayout, group int, name string) {

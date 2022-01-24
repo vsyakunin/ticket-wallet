@@ -2,9 +2,15 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"ticket-wallet/domain/models"
+)
+
+const (
+	taskUuidParam    = "taskUuid"
+	paramNotFoundErr = "url parameter %s not found"
 )
 
 func extractStartSeatingPayload(r *http.Request) (models.StartSeatingPayload, error) {
@@ -15,4 +21,17 @@ func extractStartSeatingPayload(r *http.Request) (models.StartSeatingPayload, er
 	}
 
 	return startSeatingPayload, nil
+}
+
+func extractTaskUuid(r *http.Request) (*string, error) {
+	if err := r.ParseForm(); err != nil {
+		return nil, err
+	}
+
+	taskUuid := r.Form.Get(taskUuidParam)
+	if taskUuid == "" {
+		return nil, fmt.Errorf(paramNotFoundErr, taskUuidParam)
+	}
+
+	return &taskUuid, nil
 }

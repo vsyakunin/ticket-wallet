@@ -47,3 +47,24 @@ func (c *Controller) StartSeating(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
+
+func (c *Controller) GetTaskResults(w http.ResponseWriter, r *http.Request) {
+	taskUuid, err := extractTaskUuid(r)
+	if err != nil {
+		log.Println(getLogMessage(err, r.URL.Path))
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	taskResults, err := c.Svc.GetTaskResults(taskUuid)
+	if err != nil {
+		log.Println(getLogMessage(err, r.URL.Path))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if !writeJSONResponse(w, r.URL.Path, taskResults) {
+		log.Println("error while writing")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}

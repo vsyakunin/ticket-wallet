@@ -2,8 +2,10 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	"ticket-wallet/domain/models"
 
@@ -15,6 +17,11 @@ type Service struct{}
 func NewService() *Service {
 	return &Service{}
 }
+
+const (
+	folderName  = "data"
+	fileNameRaw = "%s/%s.json"
+)
 
 func (svc *Service) GetHallLayout() (models.HallLayout, error) {
 	var hallLayout models.HallLayout
@@ -42,21 +49,70 @@ func (svc *Service) GetHallLayout() (models.HallLayout, error) {
 func (svc *Service) StartSeating(startSeatingPayload models.StartSeatingPayload) (models.SeatingResponse, error) {
 	var seatingResponse models.SeatingResponse
 
-	hallLayout, err := svc.GetHallLayout()
-	if err != nil {
-		return seatingResponse, err
-	}
-
-	seatedLayout := assignSeats(hallLayout, startSeatingPayload)
-
 	taskID, err := uuid.NewV4()
 	if err != nil {
 		return seatingResponse, err
 	}
 
-	return models.SeatingResponse{
-		TaskID:  taskID.String(),
-		Status:  models.SrsProcessing,
-		Payload: seatedLayout,
-	}, nil
+	taskIDStr := taskID.String()
+
+	seatingResponse.TaskID = taskIDStr
+	seatingResponse.Status = models.SrsCreated
+
+	newPath := filepath.Join(".", folderName)
+	if err = os.MkdirAll(newPath, os.ModePerm); err != nil {
+		return seatingResponse, err
+	}
+
+	fileName := fmt.Sprintf(fileNameRaw, folderName, taskIDStr)
+
+	file, err := json.MarshalIndent(seatingResponse, "", " ")
+	if err != nil {
+		return seatingResponse, err
+	}
+
+	if err = ioutil.WriteFile(fileName, file, 0644); err != nil {
+		return seatingResponse, err
+	}
+
+	go func() {
+		err = svc.assignSeats(startSeatingPayload, taskIDStr)
+	}()
+
+	return seatingResponse, nil
 }
+
+func (svc *Service) GetTaskResults(taskID *string) (models.SeatingResponse, error) {
+	var seatingResponse models.SeatingResponse
+
+	fileName := fmt.Sprintf(fileNameRaw, folderName, *taskID)
+
+	file, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		return seatingResponse, err
+	}
+
+	err = json.Unmarshal(file, &seatingResponse)
+	if err != nil {
+		return seatingResponse, err
+	}
+
+	return seatingResponse, nil
+}
+
+func updateTaskResults(taskUuid string, seatingResponse models.SeatingResponse) error {
+	fileName := fmt.Sprintf(fileNameRaw, folderName, taskUuid)
+
+	file, err := json.MarshalIndent(seatingResponse, "", " ")
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(fileName, file, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
