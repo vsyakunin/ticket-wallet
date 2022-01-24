@@ -73,9 +73,9 @@ func (svc *Service) StartSeating(startSeatingReq *models.StartSeatingRequest) (m
 		return seatingResponse, err
 	}
 
-	taskUUID := uuid.NewV4().String()
+	taskID := uuid.NewV4().String()
 
-	seatingResponse.TaskID = taskUUID
+	seatingResponse.TaskID = taskID
 	seatingResponse.Status = models.SrsCreated
 
 	newPath := filepath.Join(".", folderName)
@@ -85,7 +85,7 @@ func (svc *Service) StartSeating(startSeatingReq *models.StartSeatingRequest) (m
 		return seatingResponse, myerrs.NewServerError(internalErr, startSeatingErr)
 	}
 
-	fileName := fmt.Sprintf(fileNameRaw, folderName, taskUUID)
+	fileName := fmt.Sprintf(fileNameRaw, folderName, taskID)
 
 	file, err := json.MarshalIndent(seatingResponse, "", " ")
 	if err != nil {
@@ -99,50 +99,50 @@ func (svc *Service) StartSeating(startSeatingReq *models.StartSeatingRequest) (m
 	}
 
 	go func() {
-		svc.assignSeats(*startSeatingReq, taskUUID)
+		svc.assignSeats(*startSeatingReq, taskID)
 	}()
 
 	return seatingResponse, nil
 }
 
-func (svc *Service) GetSeatingResults(taskUUID *string) (models.SeatingResponse, error) {
+func (svc *Service) GetSeatingResults(taskID *string) (models.SeatingResponse, error) {
 	const funcName = "service.GetSeatingResults"
 
 	var seatingResponse models.SeatingResponse
 
-	if err := validateGuid(taskUUID); err != nil {
+	if err := validateGuid(taskID); err != nil {
 		return seatingResponse, err
 	}
 
-	fileName := fmt.Sprintf(fileNameRaw, folderName, *taskUUID)
+	fileName := fmt.Sprintf(fileNameRaw, folderName, *taskID)
 
 	file, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		log.Errorf("%s: error while reading file for task UUID %s error: %v", funcName, *taskUUID, err)
+		log.Errorf("%s: error while reading file for task ID %s error: %v", funcName, *taskID, err)
 		return seatingResponse, myerrs.NewServerError(internalErr, seatingResultErr)
 	}
 
 	err = json.Unmarshal(file, &seatingResponse)
 	if err != nil {
-		log.Errorf("%s: error while unmarshaling file contents for task UUID %s error: %v", funcName, *taskUUID, err)
+		log.Errorf("%s: error while unmarshaling file contents for task ID %s error: %v", funcName, *taskID, err)
 		return seatingResponse, myerrs.NewServerError(internalErr, seatingResultErr)
 	}
 
 	return seatingResponse, nil
 }
 
-func updateTaskResults(taskUUID string, seatingResponse models.SeatingResponse) {
+func updateTaskResults(taskID string, seatingResponse models.SeatingResponse) {
 	const funcName = "service.updateTaskResults"
 
-	fileName := fmt.Sprintf(fileNameRaw, folderName, taskUUID)
+	fileName := fmt.Sprintf(fileNameRaw, folderName, taskID)
 
 	file, err := json.MarshalIndent(seatingResponse, "", " ")
 	if err != nil {
-		log.Errorf("%s: task UUID %s marshaling error: %v", funcName, taskUUID, err)
+		log.Errorf("%s: task ID %s marshaling error: %v", funcName, taskID, err)
 	}
 
 	err = ioutil.WriteFile(fileName, file, 0644)
 	if err != nil {
-		log.Errorf("%s: task UUID %s write to file error: %v", funcName, taskUUID, err)
+		log.Errorf("%s: task ID %s write to file error: %v", funcName, taskID, err)
 	}
 }

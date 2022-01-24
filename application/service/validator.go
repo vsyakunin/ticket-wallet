@@ -14,13 +14,13 @@ const (
 	invalidParameterErr = "invalid parameter"
 )
 
-func validateGuid(guid *string) error {
-	if guid == nil {
-		err := errors.New("incorrect uuid")
+func validateGuid(taskID *string) error {
+	if taskID == nil {
+		err := errors.New("incorrect task ID")
 		return myerrs.NewBusinessError(validationErr, err)
 	}
 
-	if _, err := uuid.FromString(*guid); err != nil {
+	if _, err := uuid.FromString(*taskID); err != nil {
 		return myerrs.NewBusinessError(validationErr, err)
 	}
 

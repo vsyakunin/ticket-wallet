@@ -57,19 +57,19 @@ func (c *Controller) StartSeating(w http.ResponseWriter, r *http.Request) {
 func (c *Controller) GetSeatingResults(w http.ResponseWriter, r *http.Request) {
 	const funcName = "controller.GetSeatingResults"
 
-	taskUuid, err := extractTaskUuid(r)
+	taskID, err := extractTaskID(r)
 	if err != nil {
 		writeErrorResponse(w, err, r.URL.Path)
 		return
 	}
 
-	taskResults, err := c.Svc.GetSeatingResults(taskUuid)
+	seatingResults, err := c.Svc.GetSeatingResults(taskID)
 	if err != nil {
 		writeErrorResponse(w, err, r.URL.Path)
 		return
 	}
 
-	if !writeJSONResponse(w, r.URL.Path, taskResults) {
+	if !writeJSONResponse(w, r.URL.Path, seatingResults) {
 		log.Errorf("%s: %s", funcName, writerErr)
 		w.WriteHeader(http.StatusInternalServerError)
 	}

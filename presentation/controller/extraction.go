@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	taskUUIDParam = "taskUuid"
+	taskIDParam = "taskId"
 
+	formParseErr     = "couldn't fill the form with parameters"
 	paramNotFoundErr = "url parameter %s not found"
 	paramParseErr    = "parameter parsing error"
 	jsonParseErr     = "can't read JSON request body"
@@ -27,16 +28,16 @@ func extractStartSeatingPayload(r *http.Request) (*models.StartSeatingRequest, e
 	return &startSeatingPayload, nil
 }
 
-func extractTaskUuid(r *http.Request) (*string, error) {
+func extractTaskID(r *http.Request) (*string, error) {
 	if err := r.ParseForm(); err != nil {
-		return nil, err
+		return nil, myerrs.NewBusinessError(formParseErr, err)
 	}
 
-	taskUuid := r.Form.Get(taskUUIDParam)
-	if taskUuid == "" {
-		err := fmt.Errorf(paramNotFoundErr, taskUUIDParam)
+	taskID := r.Form.Get(taskIDParam)
+	if taskID == "" {
+		err := fmt.Errorf(paramNotFoundErr, taskIDParam)
 		return nil, myerrs.NewBusinessError(paramParseErr, err)
 	}
 
-	return &taskUuid, nil
+	return &taskID, nil
 }
