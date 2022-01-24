@@ -17,11 +17,11 @@ func NewRouter(cont *controller.Controller) *mux.Router {
 	router.StrictSlash(true)
 
 	{
-		const routeName = "get-layout"
+		const routeName = "layout"
 		router.Methods(http.MethodGet).
 			Name(routeName).
 			PathPrefix(apiVer).
-			Path("/get-layout").
+			Path("/layout").
 			Handler(http.HandlerFunc(cont.GetHallLayout))
 	}
 
@@ -30,17 +30,17 @@ func NewRouter(cont *controller.Controller) *mux.Router {
 		router.Methods(http.MethodPost).
 			Name(routeName).
 			PathPrefix(apiVer).
-			Path("/start-seating").
+			Path("/seating/start").
 			Handler(http.HandlerFunc(cont.StartSeating))
 	}
 
 	{
-		const routeName = "get-results"
+		const routeName = "seating-results"
 		router.Methods(http.MethodGet).
 			Name(routeName).
 			PathPrefix(apiVer).
-			Path("/get-results").
-			Handler(http.HandlerFunc(cont.GetTaskResults))
+			Path("/seating/results").
+			Handler(http.HandlerFunc(cont.GetSeatingResults))
 	}
 
 	return router

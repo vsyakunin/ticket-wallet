@@ -16,14 +16,16 @@ type ToBeSeated struct {
 	AreSeated bool
 }
 
-func (svc *Service) assignSeats(startSeatingPayload models.StartSeatingPayload, taskUuid string) {
+func (svc *Service) assignSeats(startSeatingPayload models.StartSeatingRequest, taskUuid string) {
+	const funcName = "service.assignSeats"
+
 	var seatingResponse models.SeatingResponse
 
 	fileName := fmt.Sprintf(fileNameRaw, folderName, taskUuid)
 
 	file, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		log.Errorf("error while reading file for task UUID %s error: %v", taskUuid, err.Error())
+		log.Errorf("%s: error while reading file for task UUID %s error: %v", funcName, taskUuid, err)
 		seatingResponse.Status = models.SrsError
 		updateTaskResults(taskUuid, seatingResponse)
 		return
@@ -31,7 +33,7 @@ func (svc *Service) assignSeats(startSeatingPayload models.StartSeatingPayload, 
 
 	err = json.Unmarshal(file, &seatingResponse)
 	if err != nil {
-		log.Errorf("error while unmarshaling file contents for task UUID %s error: %v", taskUuid, err.Error())
+		log.Errorf("%s: error while unmarshaling file contents for task UUID %s error: %v", funcName, taskUuid, err.Error())
 		seatingResponse.Status = models.SrsError
 		updateTaskResults(taskUuid, seatingResponse)
 		return
@@ -39,7 +41,7 @@ func (svc *Service) assignSeats(startSeatingPayload models.StartSeatingPayload, 
 
 	seats, err := svc.GetHallLayout()
 	if err != nil {
-		log.Errorf("error while getting hall layout for task UUID %s error: %v", taskUuid, err.Error())
+		log.Errorf("%s: error while getting hall layout for task UUID %s error: %v", funcName, taskUuid, err.Error())
 		seatingResponse.Status = models.SrsError
 		updateTaskResults(taskUuid, seatingResponse)
 		return
@@ -48,7 +50,7 @@ func (svc *Service) assignSeats(startSeatingPayload models.StartSeatingPayload, 
 	seatingResponse.Status = models.SrsProcessing
 	updateTaskResults(taskUuid, seatingResponse)
 
-	log.Infof("started task UUID %s", taskUuid)
+	log.Infof("%s: started task UUID %s", funcName, taskUuid)
 
 	toBeSeated := make([]ToBeSeated, 0, len(startSeatingPayload.Groups))
 	for _, group := range startSeatingPayload.Groups {
@@ -67,7 +69,7 @@ func (svc *Service) assignSeats(startSeatingPayload models.StartSeatingPayload, 
 
 	updateTaskResults(taskUuid, seatingResponse)
 
-	log.Infof("completed task UUID %s", taskUuid)
+	log.Infof("%s: completed task UUID %s", funcName, taskUuid)
 }
 
 func seatGroup(seats models.HallLayout, group int, name string) {

@@ -6,21 +6,25 @@ import (
 	"net/http"
 
 	"github.com/vsyakunin/ticket-wallet/domain/models"
+	myerrs "github.com/vsyakunin/ticket-wallet/domain/models/errors"
 )
 
 const (
-	taskUuidParam    = "taskUuid"
+	taskUUIDParam = "taskUuid"
+
 	paramNotFoundErr = "url parameter %s not found"
+	paramParseErr    = "parameter parsing error"
+	jsonParseErr     = "can't read JSON request body"
 )
 
-func extractStartSeatingPayload(r *http.Request) (models.StartSeatingPayload, error) {
-	var startSeatingPayload models.StartSeatingPayload
+func extractStartSeatingPayload(r *http.Request) (*models.StartSeatingRequest, error) {
+	var startSeatingPayload models.StartSeatingRequest
 	err := json.NewDecoder(r.Body).Decode(&startSeatingPayload)
 	if err != nil {
-		return startSeatingPayload, err
+		return nil, myerrs.NewBusinessError(jsonParseErr, err)
 	}
 
-	return startSeatingPayload, nil
+	return &startSeatingPayload, nil
 }
 
 func extractTaskUuid(r *http.Request) (*string, error) {
@@ -28,9 +32,10 @@ func extractTaskUuid(r *http.Request) (*string, error) {
 		return nil, err
 	}
 
-	taskUuid := r.Form.Get(taskUuidParam)
+	taskUuid := r.Form.Get(taskUUIDParam)
 	if taskUuid == "" {
-		return nil, fmt.Errorf(paramNotFoundErr, taskUuidParam)
+		err := fmt.Errorf(paramNotFoundErr, taskUUIDParam)
+		return nil, myerrs.NewBusinessError(paramParseErr, err)
 	}
 
 	return &taskUuid, nil

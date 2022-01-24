@@ -1,6 +1,6 @@
 package models
 
-type StartSeatingPayload struct {
+type StartSeatingRequest struct {
 	Groups []SeatingGroup `json:"groups"`
 }
 

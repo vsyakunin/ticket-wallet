@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	errWriter = "writer error"
+	writerErr = "writer error"
 )
 
 type Controller struct {
@@ -19,57 +19,58 @@ func NewController(svc Service) *Controller {
 }
 
 func (c *Controller) GetHallLayout(w http.ResponseWriter, r *http.Request) {
+	const funcName = "controller.GetHallLayout"
+
 	hallLayout, err := c.Svc.GetHallLayout()
 	if err != nil {
-		log.Error(getLogMessage(err, r.URL.Path))
-		w.WriteHeader(http.StatusInternalServerError)
+		writeErrorResponse(w, err, r.URL.Path)
 		return
 	}
 
 	if !writeJSONResponse(w, r.URL.Path, hallLayout) {
-		log.Error(errWriter)
+		log.Errorf("%s: %s", funcName, writerErr)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
 
 func (c *Controller) StartSeating(w http.ResponseWriter, r *http.Request) {
+	const funcName = "controller.StartSeating"
+
 	startSeatingPayload, err := extractStartSeatingPayload(r)
 	if err != nil {
-		log.Error(getLogMessage(err, r.URL.Path))
-		w.WriteHeader(http.StatusInternalServerError)
+		writeErrorResponse(w, err, r.URL.Path)
 		return
 	}
 
 	seatingResponse, err := c.Svc.StartSeating(startSeatingPayload)
 	if err != nil {
-		log.Error(getLogMessage(err, r.URL.Path))
-		w.WriteHeader(http.StatusInternalServerError)
+		writeErrorResponse(w, err, r.URL.Path)
 		return
 	}
 
 	if !writeJSONResponse(w, r.URL.Path, seatingResponse) {
-		log.Error(errWriter)
+		log.Errorf("%s: %s", funcName, writerErr)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
 
-func (c *Controller) GetTaskResults(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) GetSeatingResults(w http.ResponseWriter, r *http.Request) {
+	const funcName = "controller.GetSeatingResults"
+
 	taskUuid, err := extractTaskUuid(r)
 	if err != nil {
-		log.Error(getLogMessage(err, r.URL.Path))
-		w.WriteHeader(http.StatusBadRequest)
+		writeErrorResponse(w, err, r.URL.Path)
 		return
 	}
 
-	taskResults, err := c.Svc.GetTaskResults(taskUuid)
+	taskResults, err := c.Svc.GetSeatingResults(taskUuid)
 	if err != nil {
-		log.Error(getLogMessage(err, r.URL.Path))
-		w.WriteHeader(http.StatusInternalServerError)
+		writeErrorResponse(w, err, r.URL.Path)
 		return
 	}
 
 	if !writeJSONResponse(w, r.URL.Path, taskResults) {
-		log.Error(errWriter)
+		log.Errorf("%s: %s", funcName, writerErr)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
